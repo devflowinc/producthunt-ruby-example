@@ -56,23 +56,26 @@ for key in post_keys
     topics = []
   end
 
-  create_chunk_data = TrieveRubyClient::CreateChunkData.new
-  create_chunk_data.chunk_html = "<div>#{name} - #{tagline}</div>"
-  create_chunk_data.tracking_id = id
-  create_chunk_data.time_stamp = createdAt
-  create_chunk_data.tag_set = topics
-  create_chunk_data.weight = votesCount
-  create_chunk_data.link = "https://www.producthunt.com/posts/#{slug}"
-  # this would be the tracking_id of the group you want to add the chunk to (if you make groups for each company)
-  # chunk.group_tracking_ids = []
-  create_chunk_data.upsert_by_tracking_id = true
-  # can include any other custom fields you want to add
-  create_chunk_data.metadata = {}
+  create_chunk_data = TrieveRubyClient::ChunkData.new(
+   chunk_html: "<div>#{name} - #{tagline}</div>",
+   tracking_id: id,
+   time_stamp: createdAt,
+   tag_set: topics,
+   weight: votesCount,
+   link: "https://www.producthunt.com/posts/#{slug}",
+    # this would be the tracking_id of the group you want to add the chunk to (if you make groups for each company)
+    # chunk.group_tracking_ids: [],
+   upsert_by_tracking_id: true,
+    # can include any other custom fields you want to add
+   metadata: {},
+  )
 
   begin
     # create_chunk
-    queued_chunk = chunk_api_instance.create_chunk(tr_dataset, create_chunk_data)
-    p "Queued chunk for creation: #{queued_chunk.chunk_metadata.id}"
+    response_data = chunk_api_instance.create_chunk(tr_dataset, create_chunk_data)
+
+    # print the response_data as a stringified JSON
+    p "Queued chunk for creation in position: #{response_data.pos_in_queue}"
   rescue TrieveRubyClient::ApiError => e
     puts "Error when calling ChunkApi->create_chunk: #{e}"
   end

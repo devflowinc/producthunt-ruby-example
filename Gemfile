@@ -17,4 +17,4 @@ gem "bigdecimal", "~> 3.1"
 
 gem "csv", "~> 3.2"
 
-gem "trieve_ruby_client", "= 0.3.5"
+gem "trieve_ruby_client", "= 0.4.0"
